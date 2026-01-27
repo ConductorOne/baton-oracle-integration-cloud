@@ -5,16 +5,14 @@ import (
 	"fmt"
 	"os"
 
+	cfg "github.com/conductorone/baton-oracle-integration-cloud/pkg/config"
+	"github.com/conductorone/baton-oracle-integration-cloud/pkg/connector"
 	"github.com/conductorone/baton-sdk/pkg/config"
 	"github.com/conductorone/baton-sdk/pkg/connectorbuilder"
 	"github.com/conductorone/baton-sdk/pkg/connectorrunner"
 	"github.com/conductorone/baton-sdk/pkg/types"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
-
-	oicconfig "github.com/conductorone/baton-oracle-integration-cloud/pkg/config"
-	"github.com/conductorone/baton-oracle-integration-cloud/pkg/connector"
 )
 
 var version = "dev"
@@ -26,7 +24,7 @@ func main() {
 		ctx,
 		"baton-oracle-integration-cloud",
 		getConnector,
-		oicconfig.ConfigurationSchema,
+		cfg.Config,
 		connectorrunner.WithDefaultCapabilitiesConnectorBuilder(&connector.Connector{}),
 	)
 	if err != nil {
@@ -43,7 +41,7 @@ func main() {
 	}
 }
 
-func getConnector(ctx context.Context, v *viper.Viper) (types.ConnectorServer, error) {
+func getConnector(ctx context.Context, _ *cfg.OracleIntegrationCloud) (types.ConnectorServer, error) {
 	l := ctxzap.Extract(ctx)
 
 	cb, err := connector.New(ctx)
@@ -52,11 +50,11 @@ func getConnector(ctx context.Context, v *viper.Viper) (types.ConnectorServer, e
 		return nil, err
 	}
 
-	c, err := connectorbuilder.NewConnector(ctx, cb)
+	conn, err := connectorbuilder.NewConnector(ctx, cb)
 	if err != nil {
 		l.Error("error creating connector", zap.Error(err))
 		return nil, err
 	}
 
-	return c, nil
+	return conn, nil
 }

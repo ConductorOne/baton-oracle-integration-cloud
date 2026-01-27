@@ -11,3 +11,5 @@ var (
 		Fields: ConfigurationFields,
 	}
 )
+
+var Config = field.NewConfiguration(ConfigurationFields)
