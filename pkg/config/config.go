@@ -12,4 +12,5 @@ var (
 	}
 )
 
+//go:generate go run ./gen
 var Config = field.NewConfiguration(ConfigurationFields)
