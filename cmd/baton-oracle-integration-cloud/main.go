@@ -25,7 +25,7 @@ func main() {
 		"baton-oracle-integration-cloud",
 		getConnector,
 		cfg.Config,
-		connectorrunner.WithDefaultCapabilitiesConnectorBuilder(&connector.Connector{}),
+		connectorrunner.WithDefaultCapabilitiesConnectorBuilder(&connector.OracleIntegrationCloud{}),
 	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
